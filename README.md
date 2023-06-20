@@ -11,11 +11,11 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install request
 pip install request
 pip install beautifulsoup4
 pip install csv
-pip istall os
+pip install os
 ```
 ## Requirements
 
-IDE <br />
+IDE PyCharm <br />
 Python 3.0 <br />
 requirement.txt
 
