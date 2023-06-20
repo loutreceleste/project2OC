@@ -5,17 +5,19 @@ I need to retrieve multiples informations from the books to make a whatch and fo
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install request, BeautifulSoup from bs4 and csv.
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install request, BeautifulSoup from bs4, csv and os.
 
 ```bash
 pip install request
 pip install beautifulsoup4
 pip install csv
+pip istall os
 ```
 ## Requirements
 
 IDE <br />
-Python 3.0
+Python 3.0 <br />
+requirement.txt
 
 ## Usage
 
