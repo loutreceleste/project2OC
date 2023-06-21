@@ -157,7 +157,10 @@ def extract_picture(soup):
 # Retrieve all informations and create the csv fields
 
 data_folder = 'data'
-os.makedirs(data_folder)
+if os.path.isdir('/home/edward/Documents/Repos/OpenClassRooms/project2OC/data'):
+    print('Directory is already created. skipping...')
+else:
+    os.makedirs(data_folder)
 
 fields = ['product_page_url', ' universal_ product_code (upc)', 'title', ' price_including_tax', 'price_excluding_tax',
           'number_available', 'product_description', 'category', 'review_rating', 'image_url']
@@ -165,27 +168,26 @@ fields = ['product_page_url', ' universal_ product_code (upc)', 'title', ' price
 data = retrieve_all_ulr_all_books()
 
 for categories, urls in data.items():
-    for category in categories:
-        with open(os.path.join(data_folder, f'{categories}.csv'), 'w') as fichier_csv:
-            writer = csv.writer(fichier_csv, delimiter=',')
-            writer.writerow(fields)
-            for url in urls:
-                req = requests.get(url)
-                if req.ok:
-                    soup = BeautifulSoup(req.content, "html.parser")
-                    product_page_url = extract_product_page_url(soup)
-                    upc = extract_universal_product_code(soup)
-                    title = extract_title(soup)
-                    price_including_tax = extract_price_including_tax(soup)
-                    price_excluding_tax = extract_price_excluding_tax(soup)
-                    number_available = extract_number_available(soup)
-                    product_description = extract_product_description(soup)
-                    group = extract_group(soup)
-                    review_rating = extract_ranking(soup)
-                    image_url = extract_picture(soup)
+    with open(os.path.join(data_folder, f'{categories}.csv'), 'w') as fichier_csv:
+        writer = csv.writer(fichier_csv, delimiter=',')
+        writer.writerow(fields)
+        for url in urls:
+            req = requests.get(url)
+            if req.ok:
+                soup = BeautifulSoup(req.content, "html.parser")
+                product_page_url = extract_product_page_url(soup)
+                upc = extract_universal_product_code(soup)
+                title = extract_title(soup)
+                price_including_tax = extract_price_including_tax(soup)
+                price_excluding_tax = extract_price_excluding_tax(soup)
+                number_available = extract_number_available(soup)
+                product_description = extract_product_description(soup)
+                group = extract_group(soup)
+                review_rating = extract_ranking(soup)
+                image_url = extract_picture(soup)
 
-                    writer.writerow([product_page_url, upc, title, price_including_tax, price_excluding_tax,
-                                     number_available, product_description, group, review_rating, image_url])
+                writer.writerow([product_page_url, upc, title, price_including_tax, price_excluding_tax,
+                                 number_available, product_description, group, review_rating, image_url])
 
 
 # Retrieve and save all images in a folder
