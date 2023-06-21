@@ -11,10 +11,10 @@ def retrieve_category_books_links():
     if req.ok:
         links = []
         soup = BeautifulSoup(req.content, "html.parser")
-        tag = soup.findAll('li')[1:][2:]  # En excluant la 1er et 2eme ligne.
+        tag = soup.findAll('li')[1:][2:]  # Excluding the first and second line.
         for li in tag:
             a = li.find('a')
-            if a is not None:  # Pour choisir les 'a' avec un lien valable.
+            if a is not None:  # Choosing with an available link in 'a'.
                 link = a.get('href')
                 if 'books' in link:
                     links.append(f'http://books.toscrape.com/{link}')
@@ -25,20 +25,20 @@ def retrieve_category_books_links():
 
 def retrieve_all_category_urls():
     category_books_urls = retrieve_category_books_links()
-    updated_category_books_url = {}
+    updated_category_books_url = {}  # Making a dict
 
     for url in category_books_urls:
         req = requests.get(url)
         if req.ok:
-            category_name = url.split('/')[-2]
+            category_name = url.split('/')[-2]  # Creating the keys names.
             soup = BeautifulSoup(req.content, "html.parser")
             updated_category_books_url[category_name] = [url]
             if soup.find('li', class_='current') is None:
                 pass
             else:
                 pagination = soup.find('li', class_='current').text
-                cleaned_pagination = pagination.replace(' ', '').replace('\n', '')[-1]
-                for index in range(2, int(cleaned_pagination) + 1):
+                cleaned_pagination = pagination.replace(' ', '').replace('\n', '')[-1]  # Extracting the number of pages.
+                for index in range(2, int(cleaned_pagination) + 1):  # Starting at the second page.
                     updated_category_books_url[category_name] += [url.replace('index', f"page-{index}")]
     return updated_category_books_url
 
@@ -59,9 +59,9 @@ def retrieve_all_ulr_all_books():
                     a = tags.find('a')
                     for href in a:
                         href = a['href'].replace('../../../', '')
-                        new_url = f'http://books.toscrape.com/catalogue/{href}'
+                        new_url = f'http://books.toscrape.com/catalogue/{href}'  # Making all links.
                         new_urls.append(new_url)
-        books_links[categories] = new_urls
+        books_links[categories] = new_urls  # Replacing all links in dict.
     return books_links
 
 
@@ -75,7 +75,7 @@ def extract_product_page_url(soup):
     for link in soup.findAll('img'):
         src = link.get("src")[0]
         if src:
-            src = requests.compat.urljoin(url, src)
+            src = requests.compat.urljoin(url, src)  # Recreating the urls from each book.
     return f'{src}index.html'
 
 
@@ -91,7 +91,7 @@ def extract_universal_product_code(soup):
 
 
 def extract_title(soup):
-    titles = soup.find_all('h1')[0]
+    titles = soup.find_all('h1')[0]  # Taking only the first 'h1'.
     return titles.text
 
 
@@ -99,7 +99,7 @@ def extract_title(soup):
 
 
 def extract_price_including_tax(soup):
-    price = soup.select('td')[3]
+    price = soup.select('td')[3]  # Only taking the 4 one in 'td'.
     return price.text
 
 
@@ -107,7 +107,7 @@ def extract_price_including_tax(soup):
 
 
 def extract_price_excluding_tax(soup):
-    cost = soup.select('td')[2]
+    cost = soup.select('td')[2]  # Only taking the 3 one in 'td'.
     return cost.text
 
 
@@ -115,7 +115,7 @@ def extract_price_excluding_tax(soup):
 
 
 def extract_number_available(soup):
-    all = soup.findAll('td')[5]
+    all = soup.findAll('td')[5]  # Only taking the 6 'td'.
     dispo = (all.text[10:12])
     return dispo
 
@@ -124,7 +124,7 @@ def extract_number_available(soup):
 
 
 def extract_product_description(soup):
-    desc = soup.findAll('p')[3]
+    desc = soup.findAll('p')[3]  # Only taking the 2 one in 'p'.
     return desc.text
 
 
@@ -132,7 +132,7 @@ def extract_product_description(soup):
 
 
 def extract_group(soup):
-    cat = soup.findAll('a')[3]
+    cat = soup.findAll('a')[3]  # Only taking the 4 one ini 'a'.
     return cat.text
 
 
@@ -140,7 +140,7 @@ def extract_group(soup):
 
 
 def extract_ranking(soup):
-    note = soup.findAll('p', class_='star-rating')[0]['class'][1]
+    note = soup.findAll('p', class_='star-rating')[0]['class'][1]  # Taking only the 2 part of the text.
     notes = {'One': '1', 'Two': '2', 'Three': '3', 'Four': '4', 'Five': '5'}
     return notes[note]
 
@@ -150,7 +150,7 @@ def extract_picture(soup):
     for pic in soup.findAll('img', class_=()):
         image = pic.get("src")
         if image:
-            image = requests.compat.urljoin(url, image)
+            image = requests.compat.urljoin(url, image)  # Reconstitution of the url with requests.compat.urljoin.
             return image
 
 
@@ -158,9 +158,9 @@ def extract_picture(soup):
 
 data_folder = 'data'
 if os.path.isdir('/home/edward/Documents/Repos/OpenClassRooms/project2OC/data'):
-    print('Directory is already created. skipping...')
+    print('Directory is already created. skipping...')  # Searching if directory already exist.
 else:
-    os.makedirs(data_folder)
+    os.makedirs(data_folder)  # Creating the folder
 
 fields = ['product_page_url', ' universal_ product_code (upc)', 'title', ' price_including_tax', 'price_excluding_tax',
           'number_available', 'product_description', 'category', 'review_rating', 'image_url']
@@ -202,7 +202,7 @@ for categories, urls in data.items():
         if req.ok:
             soup = BeautifulSoup(req.content, "html.parser")
             image_urls = extract_picture(soup)
-            filename = image_urls.split('/')[-1]  # Nom du fichier basé sur l'URL
+            filename = image_urls.split('/')[-1]  # Create the images names.
             image_path = os.path.join(image_folder, filename)
             with open(image_path, 'wb') as img_file:
                 img_file.write(requests.get(image_urls).content)
