@@ -157,7 +157,7 @@ def extract_picture(soup):
 # Retrieve all informations and create the csv fields
 
 data_folder = 'data'
-if os.path.isdir('/home/edward/Documents/Repos/OpenClassRooms/project2OC/data'):
+if os.path.isdir('data'):
     print('Directory data is already created. skipping...')  # Searching if directory already exist.
 else:
     os.makedirs(data_folder)  # Creating the folder
@@ -194,7 +194,7 @@ for categories, urls in data.items():
 
 
 image_folder = 'images'
-if os.path.isdir('/home/edward/Documents/Repos/OpenClassRooms/project2OC/images'):
+if os.path.isdir('images'):
     print('Directory images is already created. skipping...')  # Searching if directory already exist.
 else:
     os.makedirs(image_folder)
